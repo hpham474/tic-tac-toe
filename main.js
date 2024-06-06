@@ -1,11 +1,11 @@
-function GameBoard() {
+function GameBoard(size = 3) {
     const board = [];
-    const size = 3;
+    const boardSize = size;
 
     // fill board with cells with default value
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < boardSize; i++) {
         board[i] = [];
-        for (let j = 0; j < size; j++) {
+        for (let j = 0; j < boardSize; j++) {
             board[i].push(Cell());
         }
     }
@@ -26,7 +26,7 @@ function GameBoard() {
     }
 
     const getSize = () => {
-        return size;
+        return boardSize;
     }
 
     return {getBoard, placeMark, getSize};
@@ -63,8 +63,8 @@ function Player(pName, symbol) {
     return {getName, getValue};
 }
 
-function GameController(playerOne = "Player One", playerTwo = "Player Two") {
-    const board = GameBoard();
+function GameController(playerOne = "Player One", playerTwo = "Player Two", size = 3) {
+    const board = GameBoard(size);
 
     const player1 = Player(playerOne, 1);
     const player2 = Player(playerTwo, 2);
@@ -190,6 +190,11 @@ function ScreenController() {
     const boardDiv = document.querySelector(".board");
     const resultDiv = document.querySelector(".result");
 
+    // default settings
+    let size = 3;
+    let player1 = "Player One";
+    let player2 = "Player Two";
+
     // result : -1 = draw, 0 = proceed normally, 1/2 = winner, 3 = new game
     const updateScreen = (result = 0) => {
         // clear the board
@@ -201,6 +206,8 @@ function ScreenController() {
 
         // get the board
         const board = game.getBoard();
+        let gridSize = "";
+        boardDiv.style.gridTemplate= "";
 
         // get the active player
         const activePlayer = game.getActivePlayer();
@@ -224,7 +231,12 @@ function ScreenController() {
                 }
                 boardDiv.appendChild(cellButton);
             }
+
+            gridSize += "1fr ";
         }
+
+        boardDiv.style.gridTemplate= `${gridSize} / ${gridSize}`;
+  
 
         if (result === -1) {
             // generate result text
@@ -240,6 +252,11 @@ function ScreenController() {
             const restartButton = document.createElement("button");
             restartButton.classList.add("restart");
             restartButton.textContent = "restart";
+            restartButton.addEventListener("click", () => {
+                game = GameController(player1, player2, size);
+
+                updateScreen(result = 3);
+            });
 
             resultDiv.appendChild(restartButton);
             return;
@@ -257,6 +274,11 @@ function ScreenController() {
             const restartButton = document.createElement("button");
             restartButton.classList.add("restart");
             restartButton.textContent = "restart";
+            restartButton.addEventListener("click", () => {
+                game = GameController(player1, player2, size);
+
+                updateScreen(result = 3);
+            });
 
             resultDiv.appendChild(restartButton);
             return;
@@ -281,13 +303,44 @@ function ScreenController() {
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
 
-    // add event listener for result
-    function clickHandlerResult(e) {
-        game = GameController();
+    // Settings Page
+    const settingsPage = document.querySelector(".settings-page");
+    const settingsButton = document.querySelector(".settings");
+    const closeButton = document.querySelector(".close-settings");
+    const form = document.querySelector("form");
+
+    settingsButton.addEventListener("click", () => {
+        settingsPage.showModal();
+    });
+
+    closeButton.addEventListener("click", () => {
+        settingsPage.close();
+    });
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+    
+        let playerOneName = document.getElementById("player-one-name").value;
+        let playerTwoName = document.getElementById("player-two-name").value;
+        let boardSize = Number(document.getElementById("size").value);
+
+        if(playerOneName != "") {
+            player1 = playerOneName;
+        }
+        if(playerTwoName != "") {
+            player2 = playerTwoName;
+        }
+        if(boardSize != 0) {
+            size = boardSize;
+        }
+        console.log(player2);
+
+        game = GameController(player1, player2, size);
 
         updateScreen(result = 3);
-    }
-    resultDiv.addEventListener("click", clickHandlerResult);
+        settingsPage.close();
+    });
+
+    
 
     // initial render
     updateScreen();

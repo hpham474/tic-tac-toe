@@ -59,11 +59,8 @@ function Player(pName, symbol) {
     const getValue = () => {
         return value;
     };
-    const setValue = (symbol) => {
-        value = symbol;
-    };
 
-    return {getName, getValue, setValue};
+    return {getName, getValue};
 }
 
 function GameController(playerOne = "Player One", playerTwo = "Player Two") {

@@ -138,9 +138,9 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two", size
         }
 
         // diagonal check
-        if (x === y) {
+        if (Number(x) + Number(y) == board.getSize() - 1) {
             for (let i = 0; i < board.getSize(); i++) {
-                if (board.getBoard()[i][board.getSize() - i - 1].getValue() != player.getValue()) {
+                if (board.getBoard()[board.getSize() - i - 1][i].getValue() != player.getValue()) {
                     break;
                 }
                 if (i === board.getSize() - 1) {

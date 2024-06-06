@@ -191,6 +191,11 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
 
     // logic of one round
     const playTurn = (x, y) => {
+        // check to see if square is already taken
+        if (board.getBoard()[x][y].getValue() != 0) {
+            return;
+        }
+
         board.placeMark(x, y, activePlayer);
 
         if (checkDraw() === -1) {
@@ -225,7 +230,6 @@ function ScreenController() {
 
         // get the board and active player
         const board = game.getBoard();
-        console.log(board);
         const activePlayer = game.getActivePlayer();
 
         // display player's turn

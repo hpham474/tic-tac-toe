@@ -256,8 +256,16 @@ function ScreenController() {
         }
 
         if (result === -1) {
+            // generate result text
             resultDiv.textContent = "No Winners! Draw!";
 
+            // disable game buttons
+            const cells = document.querySelectorAll(".cell");
+            cells.forEach((cell) => {
+                cell.disabled = true;
+            });
+
+            // generate restart button
             const restartButton = document.createElement("button");
             restartButton.classList.add("restart");
             restartButton.textContent = "restart";
@@ -265,8 +273,16 @@ function ScreenController() {
             resultDiv.appendChild(restartButton);
             return;
         } else if (result === activePlayer.getValue()){
+            // generate result text
             resultDiv.textContent = `${activePlayer.getName()} wins!`;
 
+            // disable game buttons
+            const cells = document.querySelectorAll(".cell");
+            cells.forEach((cell) => {
+                cell.disabled = true;
+            });
+
+            // generate restart button
             const restartButton = document.createElement("button");
             restartButton.classList.add("restart");
             restartButton.textContent = "restart";
@@ -294,7 +310,7 @@ function ScreenController() {
     }
     boardDiv.addEventListener("click", clickHandlerBoard);
 
-    // add event listener for board
+    // add event listener for result
     function clickHandlerResult(e) {
         game = GameController();
 

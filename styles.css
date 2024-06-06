@@ -23,8 +23,8 @@ h2 {
 }
 
 .board {
-    height: 50rem;
-    width: 50rem;
+    height: 55rem;
+    width: 55rem;
 
     display: grid;
     /* grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr; */
@@ -32,7 +32,7 @@ h2 {
 }
 
 .cell {
-    font-size: 8rem;
+    font-size: 5em;
     font-weight: bold;
 
     border: black solid 5px;

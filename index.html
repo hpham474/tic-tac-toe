@@ -29,6 +29,7 @@
                     id="player-one-name"
                     name="player-one-name"
                     type="text"
+                    minlength="1"
                     maxlength="15"
                     autofocus />
             </div>
@@ -40,6 +41,7 @@
                     id="player-two-name"
                     name="player-two-name"
                     type="text"
+                    minlength="1"
                     maxlength="15" />
             </div>
             <div class="form-input">
@@ -49,7 +51,9 @@
                 <input
                     id="size"
                     name="size"
-                    type="number" />
+                    type="number"
+                    min="3"
+                    max="8" />
             </div>
             <div class="button-row">
                 <button type="button" class="close-settings">Close</button>

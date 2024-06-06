@@ -25,9 +25,22 @@ function GameBoard() {
         board[x][y].setValue(player.getValue());
     }
 
-    // check for a win/draw
-    // -1 = draw, 0 = no win, but playable, 1 = X, 2 = O
+    // check for draw
+    const checkDraw = () => {
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (board[i][j].getValue() === 0) {
+                    return;
+                }
+            }
+        }
+        return -1;
+    }
+
+    // check for a win
+    // -1 = draw, but playable, 1 = X, 2 = O
     const checkWin = (x, y, player) => {
+
         // horizontal check
         for (let i = 0; i < size; i++) {
             if (board[x][i].getValue() != player.getValue()) {
@@ -88,7 +101,7 @@ function GameBoard() {
         console.log(display);
     }
 
-    return {getBoard, placeMark, checkWin, printBoard};
+    return {getBoard, placeMark, checkWin, checkDraw, printBoard};
 };
 
 // One square on the board. 
@@ -159,13 +172,21 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
         console.log(`${getActivePlayer().getName()} wins!`);
     }
 
+    const printDraw = () => {
+        board.printBoard();
+        console.log("No Winners! Draw!");
+    }
+
     // logic of one round
     const playTurn = (x, y) => {
         board.placeMark(x, y, activePlayer);
 
         console.log(board.checkWin(x, y, activePlayer));
         console.log(activePlayer.getValue());
-        if (board.checkWin(x, y, activePlayer) === activePlayer.getValue()) {
+        if (board.checkDraw() === -1) {
+            printDraw();
+        }
+        else if (board.checkWin(x, y, activePlayer) === activePlayer.getValue()) {
             printWinner();
         } else {
             switchPlayerTurn();

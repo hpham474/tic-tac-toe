@@ -29,20 +29,7 @@ function GameBoard() {
         return size;
     }
 
-    // print board to console
-    const printBoard = () => {
-        display = "  0 1 2\n";
-        for (let i = 0; i < size; i++) {
-            let row = `${i} `;
-            for (let j = 0; j < size; j++) {
-                row += board[i][j].getValue() + " ";
-            }
-            display += row + "\n";
-        }
-        console.log(display);
-    }
-
-    return {getBoard, placeMark, getSize, printBoard};
+    return {getBoard, placeMark, getSize};
 };
 
 // One square on the board. 
@@ -173,22 +160,6 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
         return activePlayer;
     }
 
-    // calls who's turn it is
-    const printNewTurn = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().getName()}'s turn.`);
-    }
-
-    const printWinner = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().getName()} wins!`);
-    }
-
-    const printDraw = () => {
-        board.printBoard();
-        console.log("No Winners! Draw!");
-    }
-
     // logic of one round
     const playTurn = (x, y) => {
         // check to see if square is already taken
@@ -199,19 +170,14 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
         board.placeMark(x, y, activePlayer);
 
         if (checkDraw() === -1) {
-            printDraw(); // -1
             return -1;
         }
         else if (checkWin(x, y, activePlayer) === activePlayer.getValue()) {
-            printWinner(); // 1/2
             return activePlayer.getValue();
         } else {
             switchPlayerTurn();
-            printNewTurn();
         }   
     }
-
-    printNewTurn();
 
     return {
         playTurn,
@@ -257,9 +223,8 @@ function ScreenController() {
                 } else if (board[i][j].getValue() === 1) {
                     cellButton.textContent = "X";
                 } else if (board[i][j].getValue() === 2) {
-                    cellButton.textContent = "O";
+                    cellButton.textContent = "O"
                 }
-
                 boardDiv.appendChild(cellButton);
             }
         }

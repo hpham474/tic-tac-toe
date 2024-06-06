@@ -222,14 +222,19 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
 };
 
 function ScreenController() {
-    const game = GameController();
+    let game = GameController();
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
     const resultDiv = document.querySelector(".result");
 
+    // result : -1 = draw, 0 = proceed normally, 1/2 = winner, 3 = new game
     const updateScreen = (result = 0) => {
         // clear the board
         boardDiv.textContent = "";
+
+        if (result === 3) {
+            resultDiv.textContent = "";
+        }
 
         // get the board
         const board = game.getBoard();
@@ -252,9 +257,21 @@ function ScreenController() {
 
         if (result === -1) {
             resultDiv.textContent = "No Winners! Draw!";
+
+            const restartButton = document.createElement("button");
+            restartButton.classList.add("restart");
+            restartButton.textContent = "restart";
+
+            resultDiv.appendChild(restartButton);
             return;
         } else if (result === activePlayer.getValue()){
             resultDiv.textContent = `${activePlayer.getName()} wins!`;
+
+            const restartButton = document.createElement("button");
+            restartButton.classList.add("restart");
+            restartButton.textContent = "restart";
+
+            resultDiv.appendChild(restartButton);
             return;
         }
 
@@ -275,8 +292,15 @@ function ScreenController() {
 
         updateScreen(result);
     }
-
     boardDiv.addEventListener("click", clickHandlerBoard);
+
+    // add event listener for board
+    function clickHandlerResult(e) {
+        game = GameController();
+
+        updateScreen(result = 3);
+    }
+    resultDiv.addEventListener("click", clickHandlerResult);
 
     // initial render
     updateScreen();

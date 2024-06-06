@@ -250,7 +250,16 @@ function ScreenController() {
 
                 cellButton.dataset.row = i;
                 cellButton.dataset.column = j;
-                cellButton.textContent = board[i][j].getValue();
+
+                // renders appropriate symbol
+                if (board[i][j].getValue() === 0) {
+                    cellButton.textContent = "";
+                } else if (board[i][j].getValue() === 1) {
+                    cellButton.textContent = "X";
+                } else if (board[i][j].getValue() === 2) {
+                    cellButton.textContent = "O";
+                }
+
                 boardDiv.appendChild(cellButton);
             }
         }

@@ -25,67 +25,8 @@ function GameBoard() {
         board[x][y].setValue(player.getValue());
     }
 
-    // check for draw
-    const checkDraw = () => {
-        for (let i = 0; i < size; i++) {
-            for (let j = 0; j < size; j++) {
-                if (board[i][j].getValue() === 0) {
-                    return;
-                }
-            }
-        }
-        return -1;
-    }
-
-    // check for a win
-    // -1 = draw, but playable, 1 = X, 2 = O
-    const checkWin = (x, y, player) => {
-
-        // horizontal check
-        for (let i = 0; i < size; i++) {
-            if (board[x][i].getValue() != player.getValue()) {
-                break;
-            }
-            if (i === size - 1) {
-                return player.getValue();
-            }
-        }
-
-        // vetical check
-        for (let i = 0; i < size; i++) {
-            if (board[i][y].getValue() != player.getValue()) {
-                break;
-            }
-            if (i === size - 1) {
-                return player.getValue();
-            }
-        }
-
-        // diagonal check
-        if (x === y) {
-            for (let i = 0; i < size; i++) {
-                if (board[i][i].getValue() != player.getValue()) {
-                    break;
-                }
-                if (i === size - 1) {
-                    return player.getValue();
-                }
-            }
-        }
-
-        // diagonal check
-        if (x === y) {
-            for (let i = 0; i < size; i++) {
-                if (board[i][size - i - 1].getValue() != player.getValue()) {
-                    break;
-                }
-                if (i === size - 1) {
-                    return player.getValue();
-                }
-            }
-        }
-
-        return 0;
+    const getSize = () => {
+        return size;
     }
 
     // print board to console
@@ -101,7 +42,7 @@ function GameBoard() {
         console.log(display);
     }
 
-    return {getBoard, placeMark, checkWin, checkDraw, printBoard};
+    return {getBoard, placeMark, getSize, printBoard};
 };
 
 // One square on the board. 
@@ -156,6 +97,69 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
         }
     }
 
+    // check for draw
+    const checkDraw = () => {
+        for (let i = 0; i < board.getSize(); i++) {
+            for (let j = 0; j < board.getSize(); j++) {
+                if (board.getBoard()[i][j].getValue() === 0) {
+                    return;
+                }
+            }
+        }
+        return -1;
+    }
+
+    // check for a win
+    // -1 = draw, but playable, 1 = X, 2 = O
+    const checkWin = (x, y, player) => {
+
+        // horizontal check
+        for (let i = 0; i < board.getSize(); i++) {
+            if (board.getBoard()[x][i].getValue() != player.getValue()) {
+                break;
+            }
+            if (i === board.getSize() - 1) {
+                return player.getValue();
+            }
+        }
+
+        // vetical check
+        for (let i = 0; i < board.getSize(); i++) {
+            if (board.getBoard()[i][y].getValue() != player.getValue()) {
+                break;
+            }
+            if (i === board.getSize() - 1) {
+                return player.getValue();
+            }
+        }
+
+        // diagonal check
+        if (x === y) {
+            for (let i = 0; i < board.getSize(); i++) {
+                if (board.getBoard()[i][i].getValue() != player.getValue()) {
+                    break;
+                }
+                if (i === board.getSize() - 1) {
+                    return player.getValue();
+                }
+            }
+        }
+
+        // diagonal check
+        if (x === y) {
+            for (let i = 0; i < board.getSize(); i++) {
+                if (board.getBoard()[i][board.getSize() - i - 1].getValue() != player.getValue()) {
+                    break;
+                }
+                if (i === board.getSize() - 1) {
+                    return player.getValue();
+                }
+            }
+        }
+
+        return 0;
+    }
+
     // get the active player
     const getActivePlayer = () => {
         return activePlayer;
@@ -181,12 +185,10 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
     const playTurn = (x, y) => {
         board.placeMark(x, y, activePlayer);
 
-        console.log(board.checkWin(x, y, activePlayer));
-        console.log(activePlayer.getValue());
-        if (board.checkDraw() === -1) {
+        if (checkDraw() === -1) {
             printDraw();
         }
-        else if (board.checkWin(x, y, activePlayer) === activePlayer.getValue()) {
+        else if (checkWin(x, y, activePlayer) === activePlayer.getValue()) {
             printWinner();
         } else {
             switchPlayerTurn();

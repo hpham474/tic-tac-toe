@@ -193,16 +193,18 @@ function GameController(playerOne = "Player One", playerTwo = "Player Two") {
     const playTurn = (x, y) => {
         // check to see if square is already taken
         if (board.getBoard()[x][y].getValue() != 0) {
-            return;
+            return 0;
         }
 
         board.placeMark(x, y, activePlayer);
 
         if (checkDraw() === -1) {
-            printDraw();
+            printDraw(); // -1
+            return -1;
         }
         else if (checkWin(x, y, activePlayer) === activePlayer.getValue()) {
-            printWinner();
+            printWinner(); // 1/2
+            return activePlayer.getValue();
         } else {
             switchPlayerTurn();
             printNewTurn();
@@ -223,17 +225,17 @@ function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector(".turn");
     const boardDiv = document.querySelector(".board");
+    const resultDiv = document.querySelector(".result");
 
-    const updateScreen = () => {
+    const updateScreen = (result = 0) => {
         // clear the board
         boardDiv.textContent = "";
 
-        // get the board and active player
+        // get the board
         const board = game.getBoard();
-        const activePlayer = game.getActivePlayer();
 
-        // display player's turn
-        playerTurnDiv.textContent = `${activePlayer.getName()}'s turn`
+        // get the active player
+        const activePlayer = game.getActivePlayer();
 
         // render board squares
         for(let i = 0; i < game.getSize(); i++) {
@@ -247,6 +249,17 @@ function ScreenController() {
                 boardDiv.appendChild(cellButton);
             }
         }
+
+        if (result === -1) {
+            resultDiv.textContent = "No Winners! Draw!";
+            return;
+        } else if (result === activePlayer.getValue()){
+            resultDiv.textContent = `${activePlayer.getName()} wins!`;
+            return;
+        }
+
+        // display player's turn
+        playerTurnDiv.textContent = `${activePlayer.getName()}'s turn`
     }
 
     // add event listener for board
@@ -258,9 +271,9 @@ function ScreenController() {
             return;
         }
 
-        game.playTurn(selectedRow, selectedColumn)
+        let result = game.playTurn(selectedRow, selectedColumn);
 
-        updateScreen();
+        updateScreen(result);
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
